@@ -6,7 +6,7 @@ namespace GoldSpecDigital\VoodooSmsSdk\Tests;
 
 use GoldSpecDigital\VoodooSmsSdk\Client;
 
-class DummyTest extends TestCase
+class ClientTest extends TestCase
 {
     /**
      * @return void
