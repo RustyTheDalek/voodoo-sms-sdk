@@ -1,14 +1,14 @@
 {
-  "name": "goldspecdigital/voodoo-sms-sdk",
+  "name": "rustythedalek/voodoo-sms-sdk",
   "description": "An SDK to interact with the Voodoo SMS API.",
   "type": "library",
   "license": "MIT",
-  "keywords": ["gsd", "goldspec", "digital", "voodoo", "sms", "sdk"],
-  "homepage": "https://github.com/goldspecdigital/voodoo-sms-sdk",
+  "keywords": ["gsd", "rusty", "dalek", "voodoo", "sms", "sdk"],
+  "homepage": "https://github.com/RustyTheDalek/voodoo-sms-sdk",
   "authors": [
     {
-      "name": "Matthew Inamdar",
-      "email": "matthew.inamdar@goldspecdigital.com",
+      "name": "Ian Jones",
+      "email": "ianalexanderjones@outlook.com",
       "role": "Developer"
     }
   ],

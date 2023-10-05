@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2017 GoldSpec Digital Ltd
+Copyright (c) 2023 Ian Alexander Jones
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -95,10 +95,6 @@ $ vendor/bin/phpcs
 
 Feel free to issue a pull request, although any requests that fail PHPUnit or the linter will be automatically rejected.
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/goldspecdigital/voodoo-sms-sdk/tags). 
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
