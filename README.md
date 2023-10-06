@@ -8,7 +8,7 @@ These instructions will get you up and running on your local machine and a devel
 
 ### Prerequisites
 
-* PHP: >=7.2
+* PHP: >=8.2
 
 ### Installing
 
