@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GoldSpecDigital\VoodooSmsSdk;
 
 use GoldSpecDigital\VoodooSmsSdk\Exceptions\ExternalReferenceTooLongException;
+use GoldSpecDigital\VoodooSmsSdk\Exceptions\NotValidUkNumberException;
 use GoldSpecDigital\VoodooSmsSdk\Exceptions\MessageTooLongException;
 use GoldSpecDigital\VoodooSmsSdk\Responses\DeliveryStatusResponse;
 use GoldSpecDigital\VoodooSmsSdk\Responses\SendSmsResponse;
@@ -13,12 +14,12 @@ use InvalidArgumentException;
 
 class Client
 {
-    protected const URI = 'https://www.voodooSMS.com/vapi/server/';
+    protected const URI = 'https://api.voodoosms.com/';
     protected const MESSAGE_LIMIT = 160;
     protected const EXTERNAL_REFERENCE_LIMIT = 30;
     protected const COUNTRY_CODE = 44;
     protected const RESPONSE_FORMAT = 'JSON';
-    protected const HEADERS = ['Accept' => 'application/json'];
+    protected const ACCEPT = 'application/json';
 
     /**
      * @var \GuzzleHttp\Client
@@ -28,34 +29,40 @@ class Client
     /**
      * @var string
      */
-    protected $username;
-
-    /**
-     * @var string
-     */
-    protected $password;
+    protected $api_key;
 
     /**
      * @var string
      */
     protected $from;
 
+        /**
+     * @var bool
+     */
+    protected $sandbox;
+
     /**
      * Client constructor.
      *
-     * @param string $username
-     * @param string $password
+     * @param string $api_key
      * @param null|string $from
      */
-    public function __construct(string $username, string $password, string $from = null)
+    public function __construct(string $api_key, string $from = null, $sandbox = false)
     {
+        $headers = [
+            'Authorization' => 'Bearer ' . $api_key,        
+            'Accept'        => static::ACCEPT,
+        ];
+
         $this->httpClient = new HttpClient([
             'base_uri' => static::URI,
-            'headers' => static::HEADERS,
+            'headers' => $headers,
         ]);
-        $this->username = $username;
-        $this->password = $password;
+
+        $this->api_key = $api_key;
         $this->from = $from;
+        $this->sandbox = $sandbox;
+
     }
 
     /**
@@ -84,27 +91,33 @@ class Client
             throw new ExternalReferenceTooLongException();
         }
 
-        $uri = 'sendSMS';
+        //REGEX match for a typical UK number 
+        if (!preg_match('/^(\+?44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/', $to)) {
+            throw new NotValidUkNumberException();
+        }
+
+        $to = $this->formatPhoneNumber($to);
+
+        $uri = 'sendsms';
         $parameters = [
             // Required parameters.
-            'dest' => $to,
-            'orig' => $from ?? $this->from,
+            'to' => $to,
+            'from' => $from ?? $this->from,
             'msg' => $message,
-            'uid' => $this->username,
-            'pass' => $this->password,
             'validity' => 1,
             'format' => static::RESPONSE_FORMAT,
 
             // Optional parameters.
             'cc' => static::COUNTRY_CODE,
             'eref' => $externalReference,
+            'sandbox' => $this->sandbox
         ];
         $parameters = array_filter($parameters, [$this, 'isNotNull']);
 
         $response = $this->httpClient->post($uri, ['form_params' => $parameters]);
         $responseContents = json_decode((string)$response->getBody(), true);
 
-        return new SendSmsResponse($responseContents);
+        return new SendSmsResponse($responseContents, $response->getStatusCode());
     }
 
     /**
@@ -123,7 +136,24 @@ class Client
         $response = $this->httpClient->post($uri, ['form_params' => $parameters]);
         $responseContents = json_decode((string)$response->getBody(), true);
 
-        return new DeliveryStatusResponse($responseContents);
+        return new DeliveryStatusResponse($responseContents, $response->getStatusCode());
+    }
+
+    /**
+     * @param $to
+     * @return string
+     */
+    protected function formatPhoneNumber(string $to): string 
+    {
+        if(str_starts_with($to, "+44")) {
+            return str_replace("+", "", $to);
+        }
+
+        if(str_starts_with($to, "07")) {
+            return str_replace("07", "447", $to);
+        }
+
+        return $to;
     }
 
     /**
