@@ -29,4 +29,12 @@ class SendSmsResponse extends Response
     {
         return $this->response['reference_id'];
     }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->statusCode;
+    }
 }

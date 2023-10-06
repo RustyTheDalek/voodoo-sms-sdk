@@ -12,12 +12,18 @@ abstract class Response
     protected $response;
 
     /**
+     * @var int
+     */
+    protected $statusCode;
+
+    /**
      * SendSmsResponse constructor.
      *
      * @param array $response
      */
-    public function __construct(array $response)
+    public function __construct(array $response, int $statusCode)
     {
         $this->response = $response;
+        $this->statusCode = $statusCode;
     }
 }

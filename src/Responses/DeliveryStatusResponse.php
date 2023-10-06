@@ -47,4 +47,12 @@ class DeliveryStatusResponse extends Response
     {
         return new DateTime($this->response['delivery_datetime']);
     }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->statusCode;
+    }
 }
