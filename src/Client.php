@@ -121,19 +121,17 @@ class Client
     }
 
     /**
-     * @param string $referenceID
+     * @param string $messageId
      * @return \GoldSpecDigital\VoodooSmsSdk\Responses\DeliveryStatusResponse
      */
-    public function getDeliveryStatus(string $referenceID): DeliveryStatusResponse
+    public function getDeliveryStatus(string $messageId): DeliveryStatusResponse
     {
-        $uri = 'getDlrStatus';
+        $uri = 'report';
         $parameters = [
-            'uid' => $this->username,
-            'pass' => $this->password,
-            'reference_id' => $referenceID,
+            'message_id' => $messageId,
         ];
 
-        $response = $this->httpClient->post($uri, ['form_params' => $parameters]);
+        $response = $this->httpClient->get($uri, ['form_params' => $parameters]);
         $responseContents = json_decode((string)$response->getBody(), true);
 
         return new DeliveryStatusResponse($responseContents, $response->getStatusCode());
