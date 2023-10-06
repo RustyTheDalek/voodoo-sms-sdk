@@ -1,6 +1,8 @@
 # Voodoo SMS PHP SDK
 
-PHP SDK for communicating with the Voodoo SMS API.
+PHP SDK for communicating with the Voodoo SMS API. 
+
+Based on GoldSpecDigitals work, it has been updated to work with the updated Voodoo REST API.
 
 ## Getting Started
 
@@ -15,7 +17,7 @@ These instructions will get you up and running on your local machine and a devel
 Simply pull in the package in with composer:
 
 ```
-$ composer require goldspecdigital/voodoo-sms-sdk
+$ composer require rustythedalek/voodoo-sms-sdk
 ```
 
 ### Examples
@@ -27,7 +29,7 @@ $ composer require goldspecdigital/voodoo-sms-sdk
 
 use GoldSpecDigital\VoodooSmsSdk\Client;
 
-$client = new Client('username', 'password', 'CompanyName');
+$client = new Client('api_key');
 
 $response = $client->send('This is a test message', '07712345678');
 
@@ -35,9 +37,9 @@ var_dump($response);
 
 /*
 {
-    "result": 200,
-    "resultText": "200 OK",
-    "reference_id": ["A3dads..."]
+    "statusCode": 200,
+    "originator": "VoodooSMS",
+    ...
 }
 */
 ```
@@ -49,7 +51,7 @@ var_dump($response);
 
 use GoldSpecDigital\VoodooSmsSdk\Client;
 
-$client = new Client('username', 'password', 'CompanyName');
+$client = new Client('api_key');
 
 $response = $client->getDeliveryStatus('A3dads...');
 
@@ -57,11 +59,18 @@ var_dump($response);
 
 /*
 {
-    "result": "200 OK",
-    "reference_id": "A3dads...",
-    "message": "This is a test message",
-    "delivery_status": "Delivered",
-    "delivery_datetime": "2017-12-28 00:06:09"
+    "limit": 25,
+    "report" [
+        {
+        "message_id": "97709216074987x3NFD16GgkChK2E67441209181vapi",
+        "sender_id": "Chris",
+        "to": 447000000000,
+        "sent_at": 1542120829,
+        "delivered_at": 1542120852,
+        "price": 2.9,
+        "status": "DELIVERED"
+        }
+    ]
 }
 */
 ```
