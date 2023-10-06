@@ -58,19 +58,19 @@ class ClientTest extends TestCase
         $this->assertEquals(200, $response->getStatus());
     }
 
-    // /**
-    //  * @throws \Exception
-    //  */
-    // public function testGetDeliveryStatusWorks(): void
-    // {
-    //     $client = $this->createClient('PHPUnitTest');
-    //     $response = $client->send('This is a test message', getenv('VOODOO_TO'));
-    //     $deliveryStatus = $client->getDeliveryStatus($response->getReferenceId()[0]);
+    /**
+     * @throws \Exception
+     */
+    public function testGetDeliveryStatusWorks(): void
+    {
+        $client = $this->createClient('PHPUnitTest');
+        $response = $client->send('This is a test message', getenv('VOODOO_TO'));
+        $messageId = $response->getMessages()[0]['id'];
+        $deliveryStatus = $client->getDeliveryStatus($messageId);
 
-    //     $this->assertEquals(200, $deliveryStatus->getStatus());
-    //     $this->assertEquals($response->getReferenceId()[0], $deliveryStatus->getReferenceId());
-    //     $this->assertEquals('This is a test message', $deliveryStatus->getMessage());
-    // }
+        $this->assertEquals(200, $deliveryStatus->getStatus());
+        $this->assertEquals($messageId, $deliveryStatus->getReport()[0]['message_id']);
+    }
 
     /**
      * @param null|string $from
