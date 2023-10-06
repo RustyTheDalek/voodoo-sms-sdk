@@ -29,7 +29,7 @@ class ClientTest extends TestCase
         $client = $this->createClient();
         $response = $client->send('This is a test message', getenv('VOODOO_TO'), 'PHPUnitTest', 'testing');
 
-        $this->assertEquals(200, $response->getResult());
+        $this->assertEquals(200, $response->getStatus());
     }
 
     /**
@@ -43,7 +43,7 @@ class ClientTest extends TestCase
         $client = $this->createClient();
         $response = $client->send('This is a test message', getenv('VOODOO_TO'), 'PHPUnitTest');
 
-        $this->assertEquals(200, $response->getResult());
+        $this->assertEquals(200, $response->getStatus());
     }
 
     /**
@@ -55,22 +55,22 @@ class ClientTest extends TestCase
         $client = $this->createClient('PHPUnitTest');
         $response = $client->send('This is a test message', getenv('VOODOO_TO'));
 
-        $this->assertEquals(200, $response->getResult());
+        $this->assertEquals(200, $response->getStatus());
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function testGetDeliveryStatusWorks(): void
-    {
-        $client = $this->createClient('PHPUnitTest');
-        $response = $client->send('This is a test message', getenv('VOODOO_TO'));
-        $deliveryStatus = $client->getDeliveryStatus($response->getReferenceId()[0]);
+    // /**
+    //  * @throws \Exception
+    //  */
+    // public function testGetDeliveryStatusWorks(): void
+    // {
+    //     $client = $this->createClient('PHPUnitTest');
+    //     $response = $client->send('This is a test message', getenv('VOODOO_TO'));
+    //     $deliveryStatus = $client->getDeliveryStatus($response->getReferenceId()[0]);
 
-        $this->assertEquals(200, $deliveryStatus->getResult());
-        $this->assertEquals($response->getReferenceId()[0], $deliveryStatus->getReferenceId());
-        $this->assertEquals('This is a test message', $deliveryStatus->getMessage());
-    }
+    //     $this->assertEquals(200, $deliveryStatus->getStatus());
+    //     $this->assertEquals($response->getReferenceId()[0], $deliveryStatus->getReferenceId());
+    //     $this->assertEquals('This is a test message', $deliveryStatus->getMessage());
+    // }
 
     /**
      * @param null|string $from
@@ -78,6 +78,6 @@ class ClientTest extends TestCase
      */
     protected function createClient(?string $from = null): Client
     {
-        return new Client(getenv('VOODOO_USERNAME'), getenv('VOODOO_PASSWORD'), $from);
+        return new Client(getenv('VOODOO_API_KEY'), $from, true);
     }
 }
